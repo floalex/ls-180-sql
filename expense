@@ -10,7 +10,8 @@ class ExpenseData
 
   def list_expenses
     result = @connection.exec("SELECT * FROM expenses ORDER BY created_on ASC")
-    display_expenses(result)
+    display_count(result)
+    display_expenses(result) if result.ntuples > 0
   end
 
   def add_expense(amount, memo)
@@ -22,7 +23,8 @@ class ExpenseData
   def search_expenses(query)
     sql = "SELECT * FROM expenses WHERE memo ILIKE $1"
     result = @connection.exec_params(sql, ["%#{query}%"])
-    display_expenses(result)
+    display_count(result)
+    display_expenses(result) if result.ntuples > 0
   end
 
   def delete_expense(id)
@@ -56,6 +58,23 @@ class ExpenseData
                   tuple["memo"]]
 
       puts columns.join(" | ")
+    end
+
+    puts "-" * 50
+
+    amount_sum = expenses.inject(0) do |sum, tuple|
+      sum + tuple["amount"].to_f
+    end
+
+    puts "Total #{amount_sum.to_s.rjust(25)}"
+  end
+
+  def display_count(expenses)
+    count = expenses.ntuples
+    if count == 0
+      puts "There are no expenses."
+    else
+      puts "There are #{count} expense#{"s" if count != 1}."
     end
   end
 end

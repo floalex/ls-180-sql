@@ -2,7 +2,7 @@ require "sinatra"
 require "sinatra/content_for"
 require "tilt/erubis"
 
-require_relative "database_persistence"
+require_relative "sequel_persistence"
 
 configure do
   enable :sessions
@@ -65,7 +65,7 @@ def error_for_todo(name)
 end
 
 before do
-  @storage = DatabasePersistence.new(logger)
+  @storage = SequelPersistence.new(logger)
 end
 
 get "/" do

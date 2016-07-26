@@ -96,7 +96,7 @@ class DatabasePersistence
   def tuple_to_list_hash(tuple)
     { id: tuple["id"].to_i, 
       name: tuple["name"], 
-      todos_count: 0, 
-      todos_remaining_count: 0 }
+      todos_count: tuple["todos_count"].to_i, 
+      todos_remaining_count: tuple["todos_remaining_count"].to_i }
   end
 end
